@@ -6,7 +6,7 @@ echo "<h2>Setting Up Campus Delivery Database...</h2>";
 echo "<style>body{font-family:Arial,sans-serif;padding:20px;} .success{color:green;} .error{color:red;}</style>";
 
 $queries = [
-    // 1. Users Table (Matches your advanced register.php)
+    // 1. Users Table (Includes location columns for distance calculation)
     "CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         full_name TEXT NOT NULL,
@@ -15,6 +15,8 @@ $queries = [
         password TEXT NOT NULL,
         role TEXT DEFAULT 'student',
         hostel_address TEXT,
+        latitude REAL,
+        longitude REAL,
         referral_code TEXT UNIQUE,
         referred_by INTEGER,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -29,13 +31,15 @@ $queries = [
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )",
 
-    // 3. Vendors Table
+    // 3. Vendors Table (Includes location columns for distance calculation)
     "CREATE TABLE IF NOT EXISTS vendors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         business_name TEXT NOT NULL,
         description TEXT,
         logo TEXT,
+        latitude REAL,
+        longitude REAL,
         is_approved INTEGER DEFAULT 0,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )",
@@ -60,7 +64,11 @@ $queries = [
         vendor_id INTEGER,
         rider_id INTEGER,
         total_amount REAL NOT NULL,
+        delivery_fee REAL DEFAULT 0.00,
+        promo_code TEXT,
+        discount_amount REAL DEFAULT 0.00,
         status TEXT DEFAULT 'pending',
+        payment_method TEXT DEFAULT 'wallet',
         delivery_address TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
@@ -77,6 +85,19 @@ $queries = [
         price REAL NOT NULL,
         FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
         FOREIGN KEY (product_id) REFERENCES products(id)
+    )",
+
+    // 7. Promo Codes Table (For checkout discounts)
+    "CREATE TABLE IF NOT EXISTS promo_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT UNIQUE NOT NULL,
+        type TEXT DEFAULT 'percentage',
+        value REAL NOT NULL,
+        min_order REAL DEFAULT 0,
+        max_uses INTEGER DEFAULT 0,
+        current_uses INTEGER DEFAULT 0,
+        is_active INTEGER DEFAULT 1,
+        expires_at DATETIME
     )"
 ];
 
