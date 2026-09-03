@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // setup_database.php - Run this ONCE to create all tables
 require_once 'includes/db.php';
 
@@ -6,7 +6,6 @@ echo "<h2>Setting Up Campus Delivery Database...</h2>";
 echo "<style>body{font-family:Arial,sans-serif;padding:20px;} .success{color:green;} .error{color:red;}</style>";
 
 $queries = [
-    // 1. Users Table
     "CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         full_name TEXT NOT NULL,
@@ -23,7 +22,6 @@ $queries = [
         FOREIGN KEY (referred_by) REFERENCES users(id)
     )",
     
-    // 2. Wallets Table
     "CREATE TABLE IF NOT EXISTS wallets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER UNIQUE NOT NULL,
@@ -31,7 +29,6 @@ $queries = [
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )",
 
-    // 3. Vendors Table
     "CREATE TABLE IF NOT EXISTS vendors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -44,7 +41,6 @@ $queries = [
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )",
     
-    // 4. Products Table
     "CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         vendor_id INTEGER,
@@ -57,7 +53,6 @@ $queries = [
         FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
     )",
     
-    // 5. Orders Table
     "CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -76,7 +71,6 @@ $queries = [
         FOREIGN KEY (rider_id) REFERENCES users(id)
     )",
     
-    // 6. Order Items Table
     "CREATE TABLE IF NOT EXISTS order_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         order_id INTEGER,
@@ -87,7 +81,6 @@ $queries = [
         FOREIGN KEY (product_id) REFERENCES products(id)
     )",
 
-    // 7. Promo Codes Table
     "CREATE TABLE IF NOT EXISTS promo_codes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT UNIQUE NOT NULL,
@@ -121,6 +114,5 @@ echo "<h3>Summary: $success successful, $error errors</h3>";
 if ($error == 0) {
     echo "<p class='success'><strong>🎉 Database setup complete!</strong></p>";
     echo "<p><a href='index.php'>Go to Homepage</a> | <a href='register.php'>Test Registration</a></p>";
-    echo "<p style='color:red;'><strong>️ IMPORTANT:</strong> Delete this file after running it once for security.</p>";
 }
 ?>
