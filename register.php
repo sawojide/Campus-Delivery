@@ -2,21 +2,33 @@
 session_start();
 require 'includes/db.php';
 
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit;
+}
+
 $message = "";
-$message_type = ""; // 'success' or 'danger'
+$message_type = ""; 
 $referral_error = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $full_name = trim($_POST['full_name']);
-    $email = trim($_POST['email']);
-    $phone = trim($_POST['phone']);
-    $password = $_POST['password'];
+    $full_name = trim($_POST['full_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $password = $_POST['password'] ?? '';
     $hostel_address = trim($_POST['hostel_address'] ?? '');
     $referral_code_input = strtoupper(trim($_POST['referral_code'] ?? ''));
 
     // Basic validation
     if (empty($full_name) || empty($email) || empty($phone) || empty($password)) {
         $message = "All required fields must be filled!";
+        $message_type = "danger";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Invalid email format!";
+        $message_type = "danger";
+    } elseif (strlen($password) < 6) {
+        $message = "Password must be at least 6 characters!";
         $message_type = "danger";
     } else {
         try {
@@ -68,7 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         } catch (Exception $e) {
-            $pdo->rollBack();
+            // Rollback transaction on error
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             $message = "Registration failed: " . $e->getMessage();
             $message_type = "danger";
         }
@@ -81,17 +96,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Campus Delivery</title>
-    <!-- Bootstrap 5 CSS (For beautiful, responsive layout) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (For shopping carts, users, etc.) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 40px 0;
+        }
+        .register-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card shadow border-0">
+            <div class="card register-card border-0">
                 <div class="card-body p-4">
                     <h3 class="text-center mb-2"><i class="bi bi-bag-heart-fill text-danger"></i> Campus Delivery</h3>
                     <h5 class="text-center text-muted mb-4">Create Student Account</h5>
@@ -114,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" required>
+                            <input type="tel" name="phone" class="form-control" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" required pattern="[0-9]{11}" title="Please enter an 11-digit phone number">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Hostel / Address</label>
@@ -136,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php endif; ?>
                         </div>
 
-                        <button type="submit" class="btn btn-danger w-100 mb-3 btn-lg">Register</button>
+                        <button type="submit" class="btn btn-danger w-100 mb-3 btn-lg fw-bold">Register</button>
                     </form>
                     
                     <div class="text-center">
@@ -148,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </div>
 
-<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
