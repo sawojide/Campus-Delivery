@@ -32,6 +32,20 @@ session_start();
             font-size: 1.25rem; font-weight: bold; margin: 0 auto 1rem;
         }
         .navbar { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95) !important; }
+    .btn-manual {
+    color: #dc3545 !important;
+    font-weight: 600 !important;
+    padding: 2px 8px !important;
+    border: 1px solid #dc3545 !important;
+    border-radius: 4px !important;
+    transition: all 0.3s !important;
+}
+.btn-manual:hover {
+    background: #dc3545 !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+    
     </style>
     <!-- PWA Meta Tags -->
 <meta name="theme-color" content="#dc3545">
