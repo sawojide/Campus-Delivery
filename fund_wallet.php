@@ -1,12 +1,10 @@
 <?php
 session_start();
 require 'includes/db.php';
+require 'includes/auth.php';
 
 // Security Check: Must be logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+requireLogin();
 
 $user_id = $_SESSION['user_id'];
 $message = "";
@@ -49,9 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fund Wallet - Campus Delivery</title>
-    <!-- Bootstrap 5 CSS (For beautiful, responsive layout) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (For shopping carts, users, etc.) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
@@ -59,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-danger">
     <div class="container">
-        <a href="dashboard.php" class="navbar-brand mb-0 h1">
+        <a href="dashboard.php" class="navbar-brand mb-0 h1 text-decoration-none text-white">
             <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
     </div>
@@ -68,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
+            <div class="card shadow border-0">
                 <div class="card-body p-4">
                     <h4 class="mb-3 text-center">
                         <i class="bi bi-wallet2 text-success"></i> Fund Your Wallet
@@ -95,18 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <label class="form-label fw-bold">Amount to Fund (₦)</label>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text">₦</span>
-                                <input type="number" 
-                                       name="amount" 
-                                       class="form-control" 
-                                       placeholder="e.g., 5000" 
-                                       min="100" 
-                                       step="100" 
-                                       required
-                                       autofocus>
+                                <input type="number" name="amount" class="form-control" placeholder="e.g., 5000" min="100" step="100" required autofocus>
                             </div>
                             <div class="form-text text-muted">
-                                <i class="bi bi-info-circle"></i> 
-                                Minimum funding amount is ₦100
+                                <i class="bi bi-info-circle"></i> Minimum funding amount is ₦100
                             </div>
                         </div>
 
@@ -129,8 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <hr>
 
                     <div class="text-center text-muted small">
-                        <i class="bi bi-shield-check text-success"></i> 
-                        Secure wallet funding - No real money is charged in demo mode
+                        <i class="bi bi-shield-check text-success"></i> Secure wallet funding
                     </div>
                 </div>
             </div>
@@ -140,11 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Quick amount selector
 function setAmount(amount) {
     document.querySelector('input[name="amount"]').value = amount;
 }
 </script>
-
 </body>
 </html>
