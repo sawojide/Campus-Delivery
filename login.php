@@ -29,12 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['role'] = $user['role'];
 
                 // Redirect based on role
+                               // Redirect based on role
                 if ($user['role'] == 'admin') {
                     header("Location: admin-dashboard.php");
+                } elseif ($user['role'] == 'vendor') {
+                    header("Location: vendor-dashboard.php");
                 } elseif ($user['role'] == 'rider') {
                     header("Location: rider-dashboard.php");
                 } else {
-                    header("Location: dashboard.php");
+                    header("Location: dashboard.php"); // Default to student
                 }
                 exit;
             } else {

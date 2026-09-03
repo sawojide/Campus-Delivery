@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
     $hostel_address = trim($_POST['hostel_address'] ?? '');
+    $role = $_POST['role'] ?? 'student'; // Capture the selected role
     $referral_code_input = strtoupper(trim($_POST['referral_code'] ?? ''));
 
     // Basic validation
@@ -56,31 +57,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 // Only proceed if there are no referral errors
                 if (empty($referral_error)) {
-                    // Start Transaction
                     $pdo->beginTransaction();
 
-                    // Generate a unique 8-character referral code for the NEW user
+                    // Generate a unique 8-character referral code
                     $new_referral_code = strtoupper(substr(md5($email . time()), 0, 8));
 
-                    // 1. Insert User
+                    // 1. Insert User (FIXED: Now uses $role variable instead of hardcoded 'student')
                     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, phone, password, role, hostel_address, referral_code, referred_by) VALUES (?, ?, ?, ?, 'student', ?, ?, ?)");
-                    $stmt->execute([$full_name, $email, $phone, $hashed_password, $hostel_address, $new_referral_code, $referred_by]);
+                    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, phone, password, role, hostel_address, referral_code, referred_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$full_name, $email, $phone, $hashed_password, $role, $hostel_address, $new_referral_code, $referred_by]);
                     $user_id = $pdo->lastInsertId();
 
                     // 2. Create Wallet for the new user
                     $stmt = $pdo->prepare("INSERT INTO wallets (user_id, balance) VALUES (?, 0.00)");
                     $stmt->execute([$user_id]);
 
-                    // Commit Transaction
                     $pdo->commit();
                     
-                    $message = "Registration successful! You can now log in.";
+                    $message = "Registration successful as a " . ucfirst($role) . "! You can now log in.";
                     $message_type = "success";
                 }
             }
         } catch (Exception $e) {
-            // Rollback transaction on error
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
@@ -99,29 +97,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 40px 0;
-        }
-        .register-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
+        body { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; display: flex; align-items: center; padding: 40px 0; }
+        .register-card { background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card register-card border-0">
                 <div class="card-body p-4">
                     <h3 class="text-center mb-2"><i class="bi bi-bag-heart-fill text-danger"></i> Campus Delivery</h3>
-                    <h5 class="text-center text-muted mb-4">Create Student Account</h5>
+                    <h5 class="text-center text-muted mb-4">Create Account</h5>
 
                     <?php if ($message): ?>
                         <div class="alert alert-<?= $message_type ?> alert-dismissible fade show">
@@ -141,7 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" required pattern="[0-9]{11}" title="Please enter an 11-digit phone number">
+                            <input type="tel" name="phone" class="form-control" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" required pattern="[0-9]{11}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Type</label>
+                            <select name="role" class="form-select" required>
+                                <option value="student" <?= ($_POST['role'] ?? '') === 'student' ? 'selected' : '' ?>>Student</option>
+                                <option value="rider" <?= ($_POST['role'] ?? '') === 'rider' ? 'selected' : '' ?>>Delivery Rider</option>
+                                <option value="vendor" <?= ($_POST['role'] ?? '') === 'vendor' ? 'selected' : '' ?>>Vendor</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Hostel / Address</label>
@@ -151,16 +146,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <label class="form-label">Password</label>
                             <input type="password" name="password" class="form-control" required minlength="6">
                         </div>
-                        
-                        <!-- Referral Code Field -->
                         <div class="mb-4">
-                            <label class="form-label">Referral Code (Optional)</label>
-                            <input type="text" name="referral_code" class="form-control text-uppercase" placeholder="Enter friend's code" value="<?= htmlspecialchars($_POST['referral_code'] ?? (isset($_GET['ref']) ? strtoupper($_GET['ref']) : '')) ?>">
-                            <?php if (!empty($referral_error)): ?>
-                                <small class="text-danger"><i class="bi bi-exclamation-circle"></i> <?= htmlspecialchars($referral_error) ?></small>
-                            <?php else: ?>
-                                <small class="text-muted"><i class="bi bi-gift"></i> Have a friend who uses Campus Delivery? Enter their code!</small>
-                            <?php endif; ?>
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" required>
                         </div>
 
                         <button type="submit" class="btn btn-danger w-100 mb-3 btn-lg fw-bold">Register</button>
@@ -174,7 +162,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
