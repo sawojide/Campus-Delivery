@@ -1,20 +1,24 @@
 <?php
-// includes/db.php - SQLite Version (Works on XAMPP AND Render)
+// includes/db.php - MySQL Version for Railway + Render
+
+// Use environment variables (for Render) or fallback to defaults
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'railway';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
+$port = getenv('DB_PORT') ?: '3306';
 
 try {
-    // SQLite database file in the root directory
-    $db_file = __DIR__ . '/../campus_delivery.db';
-    
-    // Create PDO connection to SQLite
-    $pdo = new PDO("sqlite:$db_file");
-    
-    // Set error modes
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    
-    // CRITICAL: Enable foreign key constraints in SQLite
-    $pdo->exec("PRAGMA foreign_keys = ON;");
-    
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]
+    );
 } catch (PDOException $e) {
     die("Database Connection Failed: " . $e->getMessage());
 }
