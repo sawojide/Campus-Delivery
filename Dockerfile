@@ -1,10 +1,18 @@
 FROM php:8.2-apache
 
-# Copy all your project files into Apache's default web directory
-COPY . /var/www/html/
+# Install MySQL PDO extensions
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Enable Apache mod_rewrite (required if you use .htaccess for routing)
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Apache listens on port 80. Render will automatically map this to its internal $PORT
+# Copy your application files
+COPY . /var/www/html/
+
+# Set working directory
+WORKDIR /var/www/html/
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html/
+
 EXPOSE 80
