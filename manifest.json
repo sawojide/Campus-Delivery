@@ -1,0 +1,24 @@
+{
+  "name": "Campus Delivery",
+  "short_name": "CampusRuns",
+  "description": "Fast and reliable campus food and product delivery.",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#dc3545",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
