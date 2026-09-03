@@ -1,35 +1,44 @@
 <?php
 session_start();
 require 'includes/db.php';
+require 'includes/auth.php';
 
-// Security Check: If not logged in, kick them back to login
-if (!isset($_SESSION['user_id'])) {
+// 1. Security Check: Require login and ensure the user is a student
+requireLogin();
+requireRole('student', 'index.php'); // Redirect to home if not a student
+
+// 2. Safely get user data using our helper function
+$user = getCurrentUser($pdo);
+
+if (!$user) {
+    // Failsafe: If user ID exists in session but not in DB, log them out
+    session_destroy();
     header("Location: login.php");
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-$user_name = $_SESSION['user_name'] ?? 'Student';
+$user_id = $user['id'];
+$user_name = $user['full_name'];
+$referral_code = $user['referral_code'] ?? 'N/A';
 
-// Fetch Wallet Balance
+// 3. Fetch Wallet Balance
 $stmt = $pdo->prepare("SELECT balance FROM wallets WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $wallet = $stmt->fetch();
 $balance = $wallet ? $wallet['balance'] : 0.00;
 
-// ✅ Fetch User Referral Code
-$stmt_user = $pdo->prepare("SELECT referral_code FROM users WHERE id = ?");
-$stmt_user->execute([$user_id]);
-$user = $stmt_user->fetch();
-$referral_code = $user['referral_code'] ?? 'N/A';
+// 4. Get total referral earnings for this user
+// Note: If you haven't created the 'referral_rewards' table yet, this will safely return 0
+try {
+    $stmt_earnings = $pdo->prepare("SELECT SUM(reward_amount) as total FROM referral_rewards WHERE referrer_id = ?");
+    $stmt_earnings->execute([$user_id]);
+    $total_earned = $stmt_earnings->fetch()['total'] ?? 0;
+} catch (PDOException $e) {
+    $total_earned = 0; // Fallback if table doesn't exist yet
+}
 
-// ✅ Get total referral earnings for this user
-$stmt_earnings = $pdo->prepare("SELECT SUM(reward_amount) as total FROM referral_rewards WHERE referrer_id = ?");
-$stmt_earnings->execute([$user_id]);
-$total_earned = $stmt_earnings->fetch()['total'] ?? 0;
-
-// Define site URL for the referral link (adjust if your live domain is different)
-$site_url = defined('SITE_URL') ? SITE_URL : 'http://localhost/campus_delivery';
+// Define site URL for the referral link
+$site_url = 'https://campus-delivery-sqov.onrender.com'; // Updated to your live Render URL
 $referral_link = $site_url . '/register.php?ref=' . urlencode($referral_code);
 ?>
 <!DOCTYPE html>
@@ -38,35 +47,42 @@ $referral_link = $site_url . '/register.php?ref=' . urlencode($referral_code);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Campus Delivery</title>
-    <!-- Bootstrap 5 CSS (For beautiful, responsive layout) -->
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (For shopping carts, users, etc.) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- PWA Meta Tags -->
-<meta name="theme-color" content="#dc3545">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Campus Delivery">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <meta name="theme-color" content="#dc3545">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Campus Delivery">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <style>
+        .referral-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
 </head>
 <body class="bg-light">
 
 <!-- Navbar -->
-<nav class="navbar navbar-dark bg-danger">
+<nav class="navbar navbar-dark bg-danger shadow-sm">
     <div class="container">
-        <span class="navbar-brand mb-0 h1"><i class="bi bi-bag-heart-fill"></i> Campus Delivery</span>
-        <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+        <a class="navbar-brand mb-0 h1 text-decoration-none text-white" href="index.php">
+            <i class="bi bi-bag-heart-fill"></i> Campus Delivery
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white-50 d-none d-md-block">Welcome, <?= htmlspecialchars($user_name) ?></span>
+            <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
     </div>
 </nav>
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Welcome, <?= htmlspecialchars($user_name) ?>! 👋</h4>
-    </div>
     
     <!-- ✅ Referral Widget (Placed prominently at the top) -->
-    <div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="card shadow-sm border-0 mb-4 referral-card">
         <div class="card-body text-white p-4">
             <div class="row align-items-center">
                 <div class="col-lg-8">
@@ -134,19 +150,19 @@ $referral_link = $site_url . '/register.php?ref=' . urlencode($referral_code);
     <!-- Quick Actions -->
     <div class="row mt-2">
         <div class="col-md-4 mb-3">
-            <a href="browse.php" class="btn btn-outline-danger w-100 p-4 text-center">
+            <a href="browse.php" class="btn btn-outline-danger w-100 p-4 text-center text-decoration-none">
                 <i class="bi bi-shop display-6 d-block mb-2"></i>
                 <h6 class="mb-0">Shop Now</h6>
             </a>
         </div>
         <div class="col-md-4 mb-3">
-            <a href="order_history.php" class="btn btn-outline-primary w-100 p-4 text-center">
+            <a href="order_history.php" class="btn btn-outline-primary w-100 p-4 text-center text-decoration-none">
                 <i class="bi bi-clock-history display-6 d-block mb-2"></i>
                 <h6 class="mb-0">My Orders</h6>
             </a>
         </div>
         <div class="col-md-4 mb-3">
-            <a href="fund_wallet.php" class="btn btn-outline-success w-100 p-4 text-center">
+            <a href="fund_wallet.php" class="btn btn-outline-success w-100 p-4 text-center text-decoration-none">
                 <i class="bi bi-wallet2 display-6 d-block mb-2"></i>
                 <h6 class="mb-0">Fund Wallet</h6>
             </a>
@@ -180,6 +196,7 @@ function copyReferralCode(link) {
     });
 }
 </script>
+
 <!-- PWA Service Worker Registration -->
 <script>
 if ('serviceWorker' in navigator) {
