@@ -1,18 +1,35 @@
 <?php
-// Run this file ONCE to create all your tables
+// setup_database.php - Run this ONCE to create all tables
 require_once 'includes/db.php';
 
+echo "<h2>Setting Up Campus Delivery Database...</h2>";
+echo "<style>body{font-family:Arial,sans-serif;padding:20px;} .success{color:green;} .error{color:red;}</style>";
+
 $queries = [
+    // 1. Users Table (Matches your advanced register.php)
     "CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        full_name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
+        phone TEXT NOT NULL,
         password TEXT NOT NULL,
         role TEXT DEFAULT 'student',
-        phone TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        hostel_address TEXT,
+        referral_code TEXT UNIQUE,
+        referred_by INTEGER,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (referred_by) REFERENCES users(id)
     )",
     
+    // 2. Wallets Table (Required by your register.php)
+    "CREATE TABLE IF NOT EXISTS wallets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER UNIQUE NOT NULL,
+        balance REAL DEFAULT 0.00,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )",
+
+    // 3. Vendors Table
     "CREATE TABLE IF NOT EXISTS vendors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -20,9 +37,10 @@ $queries = [
         description TEXT,
         logo TEXT,
         is_approved INTEGER DEFAULT 0,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )",
     
+    // 4. Products Table
     "CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         vendor_id INTEGER,
@@ -32,9 +50,10 @@ $queries = [
         category TEXT,
         image TEXT,
         stock INTEGER DEFAULT 0,
-        FOREIGN KEY (vendor_id) REFERENCES vendors(id)
+        FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
     )",
     
+    // 5. Orders Table
     "CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -49,25 +68,38 @@ $queries = [
         FOREIGN KEY (rider_id) REFERENCES users(id)
     )",
     
+    // 6. Order Items Table
     "CREATE TABLE IF NOT EXISTS order_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         order_id INTEGER,
         product_id INTEGER,
         quantity INTEGER NOT NULL,
         price REAL NOT NULL,
-        FOREIGN KEY (order_id) REFERENCES orders(id),
+        FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
         FOREIGN KEY (product_id) REFERENCES products(id)
     )"
 ];
 
-foreach ($queries as $query) {
+$success = 0;
+$error = 0;
+
+foreach ($queries as $index => $query) {
     try {
         $pdo->exec($query);
-        echo "✅ Table created successfully<br>";
+        echo "<p class='success'>✅ Table " . ($index + 1) . " created successfully</p>";
+        $success++;
     } catch (PDOException $e) {
-        echo "❌ Error: " . $e->getMessage() . "<br>";
+        echo "<p class='error'>❌ Error creating table " . ($index + 1) . ": " . $e->getMessage() . "</p>";
+        $error++;
     }
 }
 
-echo "<br><strong>Database setup complete!</strong>";
+echo "<hr>";
+echo "<h3>Summary: $success successful, $error errors</h3>";
+
+if ($error == 0) {
+    echo "<p class='success'><strong>🎉 Database setup complete!</strong></p>";
+    echo "<p><a href='index.php'>Go to Homepage</a> | <a href='register.php'>Test Registration</a></p>";
+    echo "<p style='color:red;'><strong>⚠️ IMPORTANT:</strong> Delete or rename this file after running it once for security.</p>";
+}
 ?>
