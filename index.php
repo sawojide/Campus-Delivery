@@ -262,6 +262,7 @@ session_start();
                     <a href="login.php" class="text-muted text-decoration-none">Login</a>
                     <a href="register.php" class="text-muted text-decoration-none">Register</a>
                     <a href="#features" class="text-muted text-decoration-none">Features</a>
+                    <a href="user-manual.html" target="_blank" class="btn-manual">📖 User Manual</a>
                 </div>
             </div>
             <div class="col-md-4 text-center text-md-end">
