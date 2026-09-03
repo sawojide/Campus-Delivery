@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Delivery System - User Manual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .version {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .header .date {
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .toc h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #bdc3c7;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-left: 4px solid #4CAF50;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .user-role {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .user-role h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .step {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .step-number {
+            background: #ffc107;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            color: #721c24;
+        }
+
+        .tip {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            color: #155724;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .print-btn:hover {
+            background: #45a049;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .print-btn {
+                display: none;
+            }
+
+            .toc {
+                page-break-after: always;
+            }
+
+            section {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">📥 Download / Print Manual</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚚 Campus Delivery System</h1>
+            <p class="version">Version 1.0</p>
+            <p class="date">Last Updated: September 2026</p>
+        </div>
+
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#features">2. Key Features</a></li>
+                <li><a href="#user-roles">3. User Roles & Permissions</a></li>
+                <li><a href="#getting-started">4. Getting Started</a></li>
+                <li><a href="#student-guide">5. Student User Guide</a></li>
+                <li><a href="#rider-guide">6. Rider User Guide</a></li>
+                <li><a href="#vendor-guide">7. Vendor User Guide</a></li>
+                <li><a href="#admin-guide">8. Administrator Guide</a></li>
+                <li><a href="#payment">9. Payment System</a></li>
+                <li><a href="#notifications">10. Notifications</a></li>
+                <li><a href="#troubleshooting">11. Troubleshooting</a></li>
+                <li><a href="#faq">12. Frequently Asked Questions</a></li>
+                <li><a href="#support">13. Support & Contact</a></li>
+            </ul>
+        </div>
+
+        <section id="introduction">
+            <h2>1. Introduction</h2>
+            <p>Welcome to the <strong>Campus Delivery System</strong> - your comprehensive platform for managing food and product deliveries within campus premises. This system connects students, delivery riders, vendors, and administrators in a seamless delivery ecosystem.</p>
+            
+            <div class="feature-box">
+                <strong>Purpose:</strong> To facilitate efficient, trackable, and secure delivery services within the campus community while providing real-time updates and secure payment processing.
+            </div>
+        </section>
+
+        <section id="features">
+            <h2>2. Key Features</h2>
+            
+            <h3>📱 For Students:</h3>
+            <ul>
+                <li>Browse products from multiple vendors</li>
+                <li>Real-time order tracking</li>
+                <li>Secure payment integration (PayStack)</li>
+                <li>Order history and reordering</li>
+                <li>Product reviews and ratings</li>
+                <li>Push notifications for order updates</li>
+            </ul>
+
+            <h3> For Riders:</h3>
+            <ul>
+                <li>Delivery request management</li>
+                <li>Route optimization</li>
+                <li>Earnings tracking</li>
+                <li>Delivery history</li>
+                <li>Availability status toggle</li>
+            </ul>
+
+            <h3>🏪 For Vendors:</h3>
+            <ul>
+                <li>Product catalog management</li>
+                <li>Order management dashboard</li>
+                <li>Sales analytics</li>
+                <li>Inventory tracking</li>
+                <li>Withdrawal requests</li>
+            </ul>
+
+            <h3>🔧 For Administrators:</h3>
+            <ul>
+                <li>User management</li>
+                <li>Platform analytics</li>
+                <li>Commission management</li>
+                <li>Dispute resolution</li>
+                <li>System configuration</li>
+            </ul>
+        </section>
+
+        <section id="user-roles">
+            <h2>3. User Roles & Permissions</h2>
+
+            <div class="user-role">
+                <h3>👨‍🎓 Student</h3>
+                <p><strong>Can:</strong> Place orders, make payments, track deliveries, write reviews, view order history</p>
+            </div>
+
+            <div class="user-role">
+                <h3>🚴 Delivery Rider</h3>
+                <p><strong>Can:</strong> Accept delivery requests, update delivery status, view earnings, manage availability</p>
+            </div>
+
+            <div class="user-role">
+                <h3> Vendor</h3>
+                <p><strong>Can:</strong> Manage products, process orders, view sales reports, request withdrawals</p>
+            </div>
+
+            <div class="user-role">
+                <h3>🔐 Administrator</h3>
+                <p><strong>Can:</strong> Manage all users, configure system settings, view analytics, resolve disputes</p>
+            </div>
+        </section>
+
+        <section id="getting-started">
+            <h2>4. Getting Started</h2>
+
+            <h3>Registration Process:</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Visit the Platform:</strong> Navigate to the Campus Delivery System homepage
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Choose Account Type:</strong> Select whether you're a Student, Rider, or Vendor
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Fill Registration Form:</strong> Provide required information:
+                <ul>
+                    <li>Full Name</li>
+                    <li>Email Address</li>
+                    <li>Phone Number</li>
+                    <li>Password (minimum 8 characters)</li>
+                    <li>Student ID / Vendor License (as applicable)</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Verify Email:</strong> Check your email and click the verification link
+            </div>
+
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Complete Profile:</strong> Add additional details like delivery address, payment methods, etc.
+            </div>
+
+            <div class="tip">
+                <strong>💡 Tip:</strong> Make sure to use a valid email address and phone number as these will be used for order confirmations and notifications.
+            </div>
+        </section>
+
+        <section id="student-guide">
+            <h2>5. Student User Guide</h2>
+
+            <h3>5.1 Placing an Order</h3>
+            <ol>
+                <li><strong>Browse Vendors:</strong> Visit the homepage to see available vendors</li>
+                <li><strong>Select Vendor:</strong> Click on a vendor to view their products</li>
+                <li><strong>Choose Products:</strong> Click "Add to Cart" for desired items</li>
+                <li><strong>Review Cart:</strong> Click cart icon to review items</li>
+                <li><strong>Checkout:</strong> Click "Proceed to Checkout"</li>
+                <li><strong>Delivery Details:</strong> Enter delivery address and instructions</li>
+                <li><strong>Payment:</strong> Choose payment method and complete payment</li>
+                <li><strong>Confirmation:</strong> Receive order confirmation with tracking ID</li>
+            </ol>
+
+            <h3>5.2 Tracking Your Order</h3>
+            <ul>
+                <li>Go to "My Orders" section</li>
+                <li>Click on active order</li>
+                <li>View real-time status:
+                    <ul>
+                        <li> Order Placed</li>
+                        <li>✅ Confirmed by Vendor</li>
+                        <li>👨‍ Preparing</li>
+                        <li>🚴 Rider Assigned</li>
+                        <li>🚚 On the Way</li>
+                        <li>✅ Delivered</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>5.3 Managing Your Profile</h3>
+            <ul>
+                <li><strong>Update Information:</strong> Go to Profile → Edit Details</li>
+                <li><strong>Change Password:</strong> Settings → Security → Change Password</li>
+                <li><strong>Saved Addresses:</strong> Add multiple delivery addresses</li>
+                <li><strong>Payment Methods:</strong> Save cards for faster checkout</li>
+            </ul>
+
+            <h3>5.4 Writing Reviews</h3>
+            <ol>
+                <li>Go to "Order History"</li>
+                <li>Select completed order</li>
+                <li>Click "Write Review"</li>
+                <li>Rate 1-5 stars and add comments</li>
+            </ol>
+        </section>
+
+        <section id="rider-guide">
+            <h2>6. Rider User Guide</h2>
+
+            <h3>6.1 Getting Started as a Rider</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Complete Registration:</strong> Submit required documents (ID, vehicle details)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Wait for Approval:</strong> Admin will verify your documents (24-48 hours)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Set Availability:</strong> Toggle "Available for Deliveries" when ready
+            </div>
+
+            <h3>6.2 Accepting Deliveries</h3>
+            <ul>
+                <li><strong>Notification:</strong> Receive push notification for nearby deliveries</li>
+                <li><strong>Review Details:</strong> Check pickup location, drop-off, and earnings</li>
+                <li><strong>Accept/Decline:</strong> Accept within 60 seconds or it goes to next rider</li>
+                <li><strong>Navigate:</strong> Use in-app navigation or your preferred maps app</li>
+            </ul>
+
+            <h3>6.3 Updating Delivery Status</h3>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>Picked Up</td>
+                    <td>Scan QR code or click "Picked Up" after collecting from vendor</td>
+                </tr>
+                <tr>
+                    <td>On the Way</td>
+                    <td>System updates automatically when you start moving</td>
+                </tr>
+                <tr>
+                    <td>Delivered</td>
+                    <td>Click "Delivered" and optionally take photo confirmation</td>
+                </tr>
+            </table>
+
+            <h3>6.4 Earnings & Withdrawals</h3>
+            <ul>
+                <li><strong>View Earnings:</strong> Dashboard shows daily/weekly/monthly earnings</li>
+                <li><strong>Payment History:</strong> Detailed breakdown of each delivery</li>
+                <li><strong>Request Withdrawal:</strong> Minimum withdrawal amount: 2,000</li>
+                <li><strong>Payment Schedule:</strong> Withdrawals processed within 2-3 business days</li>
+            </ul>
+        </section>
+
+        <section id="vendor-guide">
+            <h2>7. Vendor User Guide</h2>
+
+            <h3>7.1 Setting Up Your Store</h3>
+            <ol>
+                <li><strong>Complete Registration:</strong> Submit business documents</li>
+                <li><strong>Store Profile:</strong> Add store name, description, logo, operating hours</li>
+                <li><strong>Add Products:</strong>
+                    <ul>
+                        <li>Product name and description</li>
+                        <li>High-quality images (max 5 per product)</li>
+                        <li>Price and category</li>
+                        <li>Preparation time</li>
+                        <li>Availability status</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>7.2 Managing Orders</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Receive Order:</strong> Notification sound and dashboard alert
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Accept/Reject:</strong> Accept within 5 minutes or auto-reject
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Prepare Order:</strong> Update status to "Preparing"
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Ready for Pickup:</strong> Mark as "Ready" to notify rider
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Handover:</strong> Confirm when rider picks up
+            </div>
+
+            <h3>7.3 Product Management</h3>
+            <ul>
+                <li><strong>Add Product:</strong> Dashboard → Products → Add New</li>
+                <li><strong>Edit Product:</strong> Click edit icon next to product</li>
+                <li><strong>Toggle Availability:</strong> Quick toggle for in/out of stock</li>
+                <li><strong>Bulk Actions:</strong> Select multiple products for batch updates</li>
+            </ul>
+
+            <h3>7.4 Sales Reports</h3>
+            <ul>
+                <li><strong>Daily Summary:</strong> Today's orders and revenue</li>
+                <li><strong>Weekly/Monthly:</strong> Trends and analytics</li>
+                <li><strong>Top Products:</strong> Best-selling items</li>
+                <li><strong>Customer Insights:</strong> Repeat customers, peak hours</li>
+            </ul>
+
+            <h3>7.5 Withdrawals</h3>
+            <ol>
+                <li>Go to "Finance" section</li>
+                <li>Click "Request Withdrawal"</li>
+                <li>Enter amount (minimum ₦5,000)</li>
+                <li>Select bank account</li>
+                <li>Submit request</li>
+                <li>Processing time: 3-5 business days</li>
+            </ol>
+        </section>
+
+        <section id="admin-guide">
+            <h2>8. Administrator Guide</h2>
+
+            <h3>8.1 Dashboard Overview</h3>
+            <ul>
+                <li><strong>Total Users:</strong> Students, Riders, Vendors count</li>
+                <li><strong>Active Orders:</strong> Real-time order count</li>
+                <li><strong>Revenue:</strong> Platform earnings and commissions</li>
+                <li><strong>System Health:</strong> Server status and performance</li>
+            </ul>
+
+            <h3>8.2 User Management</h3>
+            <ul>
+                <li><strong>View Users:</strong> Search and filter by role, status, date</li>
+                <li><strong>Approve Riders/Vendors:</strong> Verify documents and activate accounts</li>
+                <li><strong>Suspend Users:</strong> Temporary or permanent suspension</li>
+                <li><strong>User Details:</strong> View complete profile and activity log</li>
+            </ul>
+
+            <h3>8.3 Order Management</h3>
+            <ul>
+                <li><strong>View All Orders:</strong> Filter by status, date, user</li>
+                <li><strong>Intervene:</strong> Cancel or modify orders if needed</li>
+                <li><strong>Refund Processing:</strong> Approve/refund requests</li>
+                <li><strong>Dispute Resolution:</strong> Handle customer complaints</li>
+            </ul>
+
+            <h3>8.4 Commission Settings</h3>
+            <ul>
+                <li>Set platform commission percentage (default: 10%)</li>
+                <li>Configure rider commission structure</li>
+                <li>Set minimum withdrawal amounts</li>
+                <li>Manage promotional discounts</li>
+            </ul>
+
+            <h3>8.5 System Configuration</h3>
+            <ul>
+                <li><strong>Payment Gateway:</strong> Configure PayStack settings</li>
+                <li><strong>Notifications:</strong> OneSignal push notification setup</li>
+                <li><strong>Email Settings:</strong> SMTP configuration</li>
+                <li><strong>Maintenance Mode:</strong> Enable/disable platform access</li>
+            </ul>
+        </section>
+
+        <section id="payment">
+            <h2>9. Payment System</h2>
+
+            <h3>9.1 Payment Methods</h3>
+            <ul>
+                <li><strong>Credit/Debit Cards:</strong> Visa, Mastercard, Verve</li>
+                <li><strong>Bank Transfer:</strong> Direct bank transfer via PayStack</li>
+                <li><strong>Mobile Money:</strong> Supported mobile payment options</li>
+                <li><strong>Wallet:</strong> In-app wallet for quick payments</li>
+            </ul>
+
+            <h3>9.2 Payment Security</h3>
+            <div class="tip">
+                <strong>🔒 Security Features:</strong>
+                <ul>
+                    <li>PCI DSS compliant payment processing</li>
+                    <li>SSL encryption for all transactions</li>
+                    <li>No card details stored on our servers</li>
+                    <li>3D Secure authentication</li>
+                </ul>
+            </div>
+
+            <h3>9.3 Payment Flow</h3>
+            <ol>
+                <li>Student places order and proceeds to checkout</li>
+                <li>Selects payment method</li>
+                <li>Redirected to secure PayStack payment page</li>
+                <li>Completes payment</li>
+                <li>Redirected back to platform with confirmation</li>
+                <li>Vendor receives notification</li>
+                <li>Amount held in escrow until delivery completion</li>
+                <li>Platform commission deducted</li>
+                <li>Remaining amount credited to vendor wallet</li>
+            </ol>
+
+            <h3>9.4 Refund Policy</h3>
+            <ul>
+                <li><strong>Order Cancelled:</strong> Full refund within 5-7 business days</li>
+                <li><strong>Wrong Order:</strong> Full refund or replacement</li>
+                <li><strong>Quality Issues:</strong> Partial or full refund based on assessment</li>
+                <li><strong>Non-Delivery:</strong> Full refund if order not delivered within promised time</li>
+            </ul>
+        </section>
+
+        <section id="notifications">
+            <h2>10. Notifications System</h2>
+
+            <h3>10.1 Types of Notifications</h3>
+            <table>
+                <tr>
+                    <th>User Type</th>
+                    <th>Notifications Received</th>
+                </tr>
+                <tr>
+                    <td>Student</td>
+                    <td>Order confirmation, status updates, delivery arrival, promotions</td>
+                </tr>
+                <tr>
+                    <td>Rider</td>
+                    <td>New delivery requests, pickup alerts, earnings updates</td>
+                </tr>
+                <tr>
+                    <td>Vendor</td>
+                    <td>New orders, payment received, withdrawal processed</td>
+                </tr>
+            </table>
+
+            <h3>10.2 Managing Notification Settings</h3>
+            <ol>
+                <li>Go to Settings → Notifications</li>
+                <li>Toggle on/off:
+                    <ul>
+                        <li>Push Notifications</li>
+                        <li>Email Notifications</li>
+                        <li>SMS Notifications (if available)</li>
+                    </ul>
+                </li>
+                <li>Choose notification categories:
+                    <ul>
+                        <li>Order Updates (recommended: ON)</li>
+                        <li>Promotional Offers (optional)</li>
+                        <li>System Announcements (recommended: ON)</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="warning">
+                <strong>️ Important:</strong> For best experience, keep "Order Updates" notifications enabled to receive real-time delivery status.
+            </div>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>11. Troubleshooting</h2>
+
+            <h3>Common Issues & Solutions</h3>
+
+            <h3>🔐 Login Issues</h3>
+            <ul>
+                <li><strong>Problem:</strong> Can't login</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Verify email and password</li>
+                        <li>Check Caps Lock is off</li>
+                        <li>Use "Forgot Password" to reset</li>
+                        <li>Clear browser cache and cookies</li>
+                        <li>Try incognito/private browsing mode</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>💳 Payment Failed</h3>
+            <ul>
+                <li><strong>Problem:</strong> Payment not going through</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Check internet connection</li>
+                        <li>Verify card details are correct</li>
+                        <li>Ensure sufficient balance</li>
+                        <li>Contact your bank for card authorization</li>
+                        <li>Try a different payment method</li>
+                        <li>Wait 15 minutes before retrying</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>📱 Not Receiving Notifications</h3>
+            <ul>
+                <li><strong>Problem:</strong> No push notifications</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Check notification permissions in browser/app</li>
+                        <li>Ensure notifications aren't blocked</li>
+                        <li>Verify notification settings in app</li>
+                        <li>Update to latest version</li>
+                        <li>Re-login to refresh notification token</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>🚴 Order Not Assigned to Rider</h3>
+            <ul>
+                <li><strong>Problem:</strong> Order stuck in "Preparing" status</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Wait 10-15 minutes during peak hours</li>
+                        <li>Contact vendor to confirm readiness</li>
+                        <li>Check if delivery area is serviced</li>
+                        <li>Contact support if delay exceeds 30 minutes</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>🏪 Vendor Not Accepting Orders</h3>
+            <ul>
+                <li><strong>Problem:</strong> Orders being rejected or no response</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Vendor might be offline/closed</li>
+                        <li>Try another vendor</li>
+                        <li>Check vendor operating hours</li>
+                        <li>Order might be auto-cancelled after 5 minutes</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3> App/Website Loading Slowly</h3>
+            <ul>
+                <li><strong>Problem:</strong> Slow performance</li>
+                <li><strong>Solutions:</strong>
+                    <ul>
+                        <li>Check internet speed</li>
+                        <li>Clear browser cache</li>
+                        <li>Close unnecessary tabs/applications</li>
+                        <li>Try different browser</li>
+                        <li>Update browser to latest version</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="faq">
+            <h2>12. Frequently Asked Questions</h2>
+
+            <h3>General Questions</h3>
+
+            <p><strong>Q: What areas do you deliver to?</strong><br>
+            A: We deliver within the main campus and surrounding hostels. Check the delivery area map on the homepage.</p>
+
+            <p><strong>Q: What are the delivery charges?</strong><br>
+            A: Delivery charges vary based on distance:
+            <ul>
+                <li>0-1km: 200</li>
+                <li>1-3km: ₦400</li>
+                <li>3-5km: ₦600</li>
+                <li>Above 5km: ₦100 per additional km</li>
+            </ul>
+            </p>
+
+            <p><strong>Q: How long does delivery take?</strong><br>
+            A: Average delivery time is 30-45 minutes, depending on:
+            <ul>
+                <li>Vendor preparation time</li>
+                <li>Distance to delivery location</li>
+                <li>Current order volume</li>
+                <li>Weather conditions</li>
+            </ul>
+            </p>
+
+            <p><strong>Q: Can I schedule an order for later?</strong><br>
+            A: Yes! During checkout, select "Schedule for Later" and choose your preferred delivery time.</p>
+
+            <p><strong>Q: Can I modify my order after placing it?</strong><br>
+            A: You can modify your order within 2 minutes of placement. After that, contact support immediately.</p>
+
+            <p><strong>Q: What if I receive the wrong order?</strong><br>
+            A: Contact us immediately through:
+            <ul>
+                <li>In-app support chat</li>
+                <li>Phone: [Your Support Number]</li>
+                <li>Email: support@campusdelivery.com</li>
+            </ul>
+            We'll arrange pickup and redelivery or full refund.
+            </p>
+
+            <h3>For Riders</h3>
+
+            <p><strong>Q: How much can I earn?</strong><br>
+            A: Earnings depend on:
+            <ul>
+                <li>Number of deliveries completed</li>
+                <li>Distance covered</li>
+                <li>Peak hour bonuses</li>
+                <li>Customer tips</li>
+            </ul>
+            Average riders earn ₦15,000 - ₦40,000 weekly.
+            </p>
+
+            <p><strong>Q: Do I need my own vehicle?</strong><br>
+            A: Yes, you need a functional bicycle, motorcycle, or scooter. You must also have a valid driver's license for motorized vehicles.</p>
+
+            <p><strong>Q: Can I work part-time?</strong><br>
+            A: Absolutely! Set your own schedule. Toggle availability when you want to work.</p>
+
+            <h3>For Vendors</h3>
+
+            <p><strong>Q: What commission do you charge?</strong><br>
+            A: We charge a 10% commission on each order. This covers platform maintenance, marketing, and payment processing.</p>
+
+            <p><strong>Q: How often do I get paid?</strong><br>
+            A: You can request withdrawals anytime (minimum ₦5,000). Payments are processed within 3-5 business days.</p>
+
+            <p><strong>Q: Can I offer discounts?</strong><br>
+            A: Yes! You can create promotional codes and special offers from your vendor dashboard.</p>
+        </section>
+
+        <section id="support">
+            <h2>13. Support & Contact</h2>
+
+            <h3>📞 Contact Information</h3>
+            <table>
+                <tr>
+                    <th>Department</th>
+                    <th>Contact</th>
+                    <th>Hours</th>
+                </tr>
+                <tr>
+                    <td>Customer Support</td>
+                    <td>support@campusdelivery.com<br>📱 [Your Phone Number]</td>
+                    <td>24/7</td>
+                </tr>
+                <tr>
+                    <td>Technical Support</td>
+                    <td>tech@campusdelivery.com</td>
+                    <td>Mon-Fri, 9AM-6PM</td>
+                </tr>
+                <tr>
+                    <td>Billing Inquiries</td>
+                    <td>billing@campusdelivery.com</td>
+                    <td>Mon-Fri, 9AM-5PM</td>
+                </tr>
+                <tr>
+                    <td>Vendor Partnerships</td>
+                    <td>vendors@campusdelivery.com</td>
+                    <td>Mon-Sat, 10AM-4PM</td>
+                </tr>
+            </table>
+
+            <h3> Live Chat</h3>
+            <p>Available on the website and mobile app. Click the chat icon in the bottom-right corner for instant assistance.</p>
+
+            <h3> Social Media</h3>
+            <ul>
+                <li>Facebook: @CampusDeliveryNG</li>
+                <li>Twitter: @CampusDelivery</li>
+                <li>Instagram: @campusdelivery_ng</li>
+                <li>WhatsApp: [Your WhatsApp Number]</li>
+            </ul>
+
+            <h3> Office Address</h3>
+            <p>
+                Campus Delivery System<br>
+                [Your Office Address]<br>
+                [City, State]<br>
+                Nigeria
+            </p>
+
+            <div class="tip">
+                <strong>💡 Before Contacting Support:</strong>
+                <ul>
+                    <li>Have your order ID ready</li>
+                    <li>Take screenshots of any error messages</li>
+                    <li>Note the time the issue occurred</li>
+                    <li>Check our FAQ section - your question might already be answered!</li>
+                </ul>
+            </div>
+
+            <h3>Feedback</h3>
+            <p>We value your feedback! Help us improve by:
+            <ul>
+                <li>Rating your delivery experience</li>
+                <li>Writing reviews for vendors and riders</li>
+                <li>Suggesting new features via feedback form</li>
+                <li>Participating in user surveys</li>
+            </ul>
+            </p>
+        </section>
+
+        <div class="footer">
+            <p><strong>Campus Delivery System</strong></p>
+            <p>Making campus life easier, one delivery at a time.</p>
+            <p style="margin-top: 20px;">© 2026 Campus Delivery System. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                This manual is subject to updates. Last revised: September 2026
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for table of contents links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add print functionality
+        function printManual() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
