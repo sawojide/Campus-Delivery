@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Install MySQL PDO extension
+# Install MySQL extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
 # Enable Apache mod_rewrite

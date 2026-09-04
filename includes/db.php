@@ -1,12 +1,11 @@
 <?php
-// includes/db.php - MySQL Version for Railway + Render
+// includes/db.php - MySQL Version for Railway
 
-// Use environment variables (for Render) or fallback to defaults
 $host = getenv('DB_HOST') ?: 'localhost';
-$dbname = getenv('DB_NAME') ?: 'railway';
+$port = getenv('DB_PORT') ?: '3306';
+$dbname = getenv('DB_NAME') ?: 'campus_app';
 $username = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASS') ?: '';
-$port = getenv('DB_PORT') ?: '3306';
 
 try {
     $pdo = new PDO(
